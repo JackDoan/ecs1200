@@ -9,6 +9,7 @@
 *.pch
 
 # Libraries
+*.dep
 *.lib
 *.a
 *.la
