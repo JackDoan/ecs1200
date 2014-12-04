@@ -10,10 +10,12 @@
  
  */
 
-const int infraLED = P1_0;
+const int greenLED = P2_5;
+const int infraStatusLED = P2_4;
+const int infraLED = P2_3;
 const int analogInPin = P1_4;  // Analog input pin
 const long baud = 115200;
-const int sensitivity = 75; // integer from 0-1024, where 0 is 0 volts across the pullup, and 1024 3.3 volts
+const int sensitivity = 25; // integer from 0-1024, where 0 is 0 volts across the pullup, and 1024 3.3 volts
 
 volatile bool infraState = 0;
 int sensorValue = 0;  
@@ -25,9 +27,12 @@ void infraOnOff();
 void setup() {
   Serial.begin(baud);
   pinMode(infraLED, OUTPUT);
+  pinMode(infraStatusLED, OUTPUT);
   pinMode(PUSH2, INPUT_PULLUP);
-  pinMode(GREEN_LED, OUTPUT);
-  digitalWrite(GREEN_LED, 0);
+  pinMode(greenLED, OUTPUT);
+  digitalWrite(greenLED, 0);
+  digitalWrite(infraStatusLED, 0);
+  digitalWrite(infraLED, 0);
   attachInterrupt(PUSH2, infraOnOff, FALLING); 
 }
 
@@ -38,11 +43,11 @@ void loop() {
     delay(20); //debounce it a little
     if (sensorValue >= 75) {
       if (lightStatus == 0) {
-        digitalWrite(GREEN_LED, 1);
+        digitalWrite(greenLED, 1);
         lightStatus = 1;
       }
       else {
-        digitalWrite(GREEN_LED, 0);
+        digitalWrite(greenLED, 0);
         lightStatus = 0;
       }
     }
@@ -70,5 +75,6 @@ void loop() {
 void infraOnOff() {
   infraState = !infraState;
   digitalWrite(infraLED, infraState);
+  digitalWrite(infraStatusLED, infraState);
 }
   
